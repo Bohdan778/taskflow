@@ -14,6 +14,16 @@ from app.security import get_current_user
 router = APIRouter(prefix="/habits", tags=["habits"])
 
 
+from app.schemas.habit import (
+    HabitCreate,
+    HabitLogRead,
+    HabitRead,
+    HabitStats,
+    HabitWithLogs,
+)
+from app.services.habit_stats import calculate_streaks
+
+
 async def get_user_habit(
     habit_id: int, session: AsyncSession, current_user: User
 ) -> Habit:
@@ -84,3 +94,25 @@ async def delete_habit(
     habit = await get_user_habit(habit_id, session, current_user)
     await session.delete(habit)
     await session.commit()
+    
+@router.get("/{habit_id}/stats", response_model=HabitStats)
+async def get_habit_stats(
+    habit_id: int,
+    session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    habit = await get_user_habit(habit_id, session, current_user)
+    result = await session.execute(
+        select(HabitLog.log_date).where(HabitLog.habit_id == habit.id)
+    )
+    log_dates = list(result.scalars().all())
+
+    today = date.today()
+    current, longest = calculate_streaks(log_dates, today)
+    return HabitStats(
+        habit_id=habit.id,
+        total_logs=len(log_dates),
+        current_streak=current,
+        longest_streak=longest,
+        done_today=today in log_dates,
+    )

@@ -26,3 +26,10 @@ class HabitLogRead(BaseModel):
 
 class HabitWithLogs(HabitRead):
     logs: list[HabitLogRead]
+    
+class HabitStats(BaseModel):
+    habit_id: int
+    total_logs: int
+    current_streak: int
+    longest_streak: int
+    done_today: bool
