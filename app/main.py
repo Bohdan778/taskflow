@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from routers import auth, tasks
+from app.routers import auth, tasks
 
 app = FastAPI(title="TaskFlow")
 

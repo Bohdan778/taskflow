@@ -3,12 +3,15 @@ from datetime import datetime, timedelta, timezone
 
 import jwt
 from argon2 import PasswordHasher
+from dotenv import load_dotenv
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database import get_session
-from models import User
+from app.database import get_session
+from app.models import User
+
+load_dotenv()
 
 ph = PasswordHasher()
 SECRET_KEY = os.environ["SECRET_KEY"]
