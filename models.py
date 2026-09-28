@@ -15,4 +15,5 @@ class Task(Base):
     due_date: Mapped[date]
     priority: Mapped[int] = mapped_column(default=3)
     completed: Mapped[bool] = mapped_column(default=False)
+    category: Mapped[str | None] = mapped_column(String(50), default=None)
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
