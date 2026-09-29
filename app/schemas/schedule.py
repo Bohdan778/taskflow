@@ -26,3 +26,9 @@ class ScheduleEventRead(BaseModel):
     description: str | None
     start_time: datetime
     end_time: datetime
+    
+class ScheduleEventUpdate(BaseModel):
+    title: str | None = None
+    description: str | None = None
+    start_time: datetime | None = None
+    end_time: datetime | None = None
